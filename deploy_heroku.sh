@@ -2,7 +2,7 @@
 
 set -e
 
-heroku git:remote --app stonecutter
+heroku git:remote --app smee
 heroku maintenance:on
 heroku buildpacks:clear
 heroku buildpacks:set https://github.com/heroku/heroku-buildpack-clojure
