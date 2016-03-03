@@ -113,7 +113,7 @@ legend {
   }
   &__help {
     display: block;
-    margin-top: -0.5rem;
+    margin-top: 0.5rem;
     padding-bottom: 0.5rem;
     @include font-size(14px);
     font-weight: 100;
@@ -167,4 +167,18 @@ legend {
 
 .sign-in {
   margin-top: 1.5rem;
+}
+
+.profile__picture {
+  width: 20%;
+  padding-right: 15px;
+  float: left;
+  img {
+    display: block;
+    width: 100%;
+  }
+}
+
+.upload__picture {
+  overflow: auto;
 }

@@ -28,9 +28,9 @@
       (let [page (-> (th/create-request) profile)]
         page => (th/has-attr? [:.clj--change-password__link] :href (r/path :show-change-password-form))))
 
-(future-fact "change profile details link should go to correct endpoint"
+(fact "change profile details link should go to correct endpoint"
       (let [page (-> (th/create-request) profile)]
-        page => (th/has-attr? [:.clj--change-profile-details__link] :href (r/path :show-change-profile-forms))))
+        page => (th/has-attr? [:.clj--change-profile-details__link] :href (r/path :show-change-profile-form))))
 
 (fact "change email link should go to the correct endpoint"
       (let [page (-> (th/create-request) profile)]
@@ -46,7 +46,6 @@
 
 (fact "update profile picture should post to correct endpoint"
       (let [page (-> (th/create-request) profile)]
-        (html/select page [:.clj--update-profile-profile__link]) => (th/has-form-action? (r/path :update-profile-image))
         (html/select page [:.clj--card-photo-upload]) => (th/has-form-action? (r/path :update-profile-image))))
 
 (fact

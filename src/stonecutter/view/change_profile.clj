@@ -14,7 +14,7 @@
 
 
 (defn add-change-first-name-error [enlive-m err]
-  (if-let [change-first-name-error (:first-name err)]
+  (if-let [change-first-name-error (:change-first-name err)]
     (let [error-translation (get-in error-translations [:first-name change-first-name-error])]
       (-> enlive-m
           (vh/add-error-class [:.clj--first-name])
@@ -22,7 +22,7 @@
     enlive-m))
 
 (defn add-change-last-name-error [enlive-m err]
-  (if-let [change-last-name-error (:last-name err)]
+  (if-let [change-last-name-error (:change-last-name err)]
     (let [error-translation (get-in error-translations [:last-name change-last-name-error])]
       (-> enlive-m
           (vh/add-error-class [:.clj--last-name])
@@ -38,13 +38,9 @@
 (defn add-change-name-errors [enlive-m err]
   (if (empty? err)
     enlive-m
-    (-> (add-change-first-name-error enlive-m err)
+    (-> enlive-m
+        (add-change-first-name-error err)
         (add-change-last-name-error err))))
-
-(defn set-flash-message [enlive-m request]
-  (case (:flash request)
-    :name-changed (set-translation enlive-m :.clj--flash-message-text "content:flash/name-changed")
-    (vh/remove-element enlive-m [:.clj--flash-message-container])))
 
 (defn pre-fill-inputs [enlive-m request]
   (let [context (:context request)]
@@ -52,17 +48,20 @@
              [:.clj--change-first-name__input] (html/set-attr :value (or (get-in request [:params :first-name]) (:user-first-name context)))
              [:.clj--change-last-name__input] (html/set-attr :value (or (get-in request [:params :last-name]) (:user-last-name context))))))
 
+(defn add-profile-image [enlive-m request]
+  (let [profile-picture (get-in request [:context :user-profile-picture])]
+    (html/at enlive-m [:.clj--profile-picture :img] (html/set-attr :src profile-picture))))
+
 (defn change-profile-form [request]
   (let [err (get-in request [:context :errors])
         library-m (vh/load-template-with-lang "public/library.html" request)]
     (-> (vh/load-template-with-lang "public/change-profile.html" request)
         (vh/display-admin-navigation-links request library-m)
         (add-change-name-errors err)
-        (vh/set-form-action [:.clj--change-name__form] (r/path :change-profile))
-        (vh/set-form-action [:.clj--update-profile-picture__link] (r/path :change-profile))
-        (set-flash-message request)
+        (vh/set-form-action [:.clj--change-profile-details__form] (r/path :change-profile))
         (pre-fill-inputs request)
         set-cancel-link
+        (add-profile-image request)
         vh/add-anti-forgery
         (vh/add-script "js/main.js")
         vh/remove-work-in-progress)))
